@@ -174,8 +174,8 @@ const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
     }
     return null;
   },
-  cookieName: "skoomer12a@gmail.com",
-  cookiePassword: "skomorje",
+  cookieName: "zcelenka1@etf.unsa.ba",
+  cookiePassword: "test123",
 });
 
 module.exports = router;
