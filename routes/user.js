@@ -135,8 +135,10 @@ router.get("/profile", middleware.isLoggedIn, async (req, res) => {
 
 // GET: logout
 router.get("/logout", middleware.isLoggedIn, (req, res) => {
-  req.logout();
-  req.session.cart = null;
-  res.redirect("/");
+  req.logout(err => {
+    if(err) return next(err);
+    req.session.cart = null;
+    res.redirect("/");
+  });
 });
 module.exports = router;

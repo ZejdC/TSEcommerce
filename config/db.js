@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const uri = process.env.MONGO_URI || "mongodb://localhost/bags-ecommerce";
+    const uri = process.env.MONGO_URI || "mongodb+srv://vlasnik:vlasnikshopa@cluster0.blpeucs.mongodb.net/test";
+    console.log(uri)
     await mongoose
       .connect(uri, {
         useNewUrlParser: true,
-        useCreateIndex: true,
         useUnifiedTopology: true,
       })
       .catch((error) => console.log(error));
