@@ -163,8 +163,8 @@ const adminBro = new AdminBro({
 });
 
 const ADMIN = {
-  email: "zcelenka1@etf.unsa.ba",
-  password: "test123",
+  email: process.env.ADMIN_EMAIL,
+  password: process.env.ADMIN_PASSWORD,
 };
 
 const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
@@ -174,8 +174,8 @@ const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
     }
     return null;
   },
-  cookieName: "zcelenka1@etf.unsa.ba",
-  cookiePassword: "test123",
+  cookieName: process.env.ADMIN_COOKIE_NAME,
+  cookiePassword: process.env.ADMIN_COOKIE_PASSWORD,
 });
 
 module.exports = router;

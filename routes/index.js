@@ -7,6 +7,7 @@ const Cart = require("../models/cart");
 const Order = require("../models/order");
 const middleware = require("../middleware");
 const router = express.Router();
+const Log = require("../models/log");
 
 const csrfProtection = csrf();
 router.use(csrfProtection);
@@ -71,6 +72,12 @@ router.get("/add-to-cart/:id", async (req, res) => {
     if (req.user) {
       cart.user = req.user._id;
       await cart.save();
+
+      const log = new Log({
+        user: req.user,
+        action: "added a product to the shopping cart",
+      });
+      log.save();
     }
     req.session.cart = cart;
     req.flash("success", "Item added to the shopping cart");
@@ -144,6 +151,13 @@ router.get("/reduce/:id", async function (req, res, next) {
       // if the item's qty reaches 0, remove it from the cart
       if (cart.items[itemIndex].qty <= 0) {
         await cart.items.remove({ _id: cart.items[itemIndex]._id });
+        if (req.user) {
+          const log = new Log({
+            user: req.user,
+            action: "reduced one from an item in the shopping cart",
+          });
+          log.save();
+        }
       }
       req.session.cart = cart;
       //save the cart it only if user is logged in
@@ -191,6 +205,14 @@ router.get("/removeAll/:id", async function (req, res, next) {
       req.session.cart = null;
       await Cart.findByIdAndRemove(cart._id);
     }
+    if (req.user) {
+      const log = new Log({
+        user: req.user,
+        action: "removed all instances of a single product from the cart",
+      });
+      log.save();
+    }
+
     res.redirect(req.headers.referer);
   } catch (err) {
     console.log(err.message);
@@ -256,6 +278,13 @@ router.post("/checkout", middleware.isLoggedIn, async (req, res) => {
         req.flash("success", "Successfully purchased");
         req.session.cart = null;
         res.redirect("/user/profile");
+
+        const log = new Log({
+          user: req.user,
+          action: "created order successfully",
+        });
+
+        log.save();
       });
     }
   );
