@@ -11,6 +11,7 @@ const flash = require("connect-flash");
 const Category = require("./models/category");
 var MongoStore = require("connect-mongo")(session);
 const connectDB = require("./config/db");
+const helmet = require('helmet')
 
 const app = express();
 require("./config/passport");
@@ -20,7 +21,8 @@ connectDB();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-
+app.use(helmet.frameguard());
+app.disable('x-powered-by');
 // admin route
 const adminRouter = require("./routes/admin");
 app.use("/admin", adminRouter);
