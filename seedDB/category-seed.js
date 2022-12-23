@@ -8,8 +8,9 @@ connectDB();
 async function seedDB() {
   async function seedCateg(titleStr) {
     try {
-      const categ = await new Category({ title: titleStr });
-      await categ.save();
+      await Category.findOneAndUpdate({ title: titleStr },{ title: titleStr },{upsert:true,useFindAndModify:false},function(err,doc){
+        if(err)return err;
+      });
     } catch (error) {
       console.log(error);
       return error;

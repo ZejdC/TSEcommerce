@@ -196,7 +196,7 @@ async function seedDB() {
     try {
       const categ = await Category.findOne({ title: categStr });
       for (let i = 0; i < titlesArr.length; i++) {
-        let prod = new Product({
+        let prod = {
           productCode: faker.helpers.replaceSymbolWithNumber("####-##########"),
           title: titlesArr[i],
           imagePath: imgsArr[i],
@@ -205,8 +205,10 @@ async function seedDB() {
           manufacturer: faker.company.companyName(0),
           available: true,
           category: categ._id,
+        };
+        await Product.findOneAndUpdate(prod,prod,{upsert:true,useFindAndModify:false},function(err,doc){
+          if(err)return err;
         });
-        await prod.save();
       }
     } catch (error) {
       console.log(error);
